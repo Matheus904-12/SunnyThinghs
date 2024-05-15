@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Animatable from 'react-native-animatable';
-import { AntDesign } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
+import { Feather } from '@expo/vector-icons'; // Importe Feather
 
 const ListScreen = ({ navigation }) => {
   const [location, setLocation] = useState('');
   const [maxValue, setMaxValue] = useState('');
   const [dateTime, setDateTime] = useState('');
+  const [selectedItem, setSelectedItem] = useState('');
   const [showSmile, setShowSmile] = useState(false);
 
   const handleSave = async () => {
     try {
-      // Salvar os dados no AsyncStorage
       await AsyncStorage.setItem('location', location);
       await AsyncStorage.setItem('maxValue', maxValue);
       await AsyncStorage.setItem('dateTime', dateTime);
-      
-      // Mostrar o ícone sorrindo por 2 segundos
+      await AsyncStorage.setItem('selectedItem', selectedItem);
+
       setShowSmile(true);
       setTimeout(() => {
         setShowSmile(false);
-        navigation.navigate('Home'); // Voltar para a tela inicial após 2 segundos
+        navigation.navigate('Home');
       }, 2000);
     } catch (error) {
       console.error('Erro ao salvar os dados:', error);
@@ -34,15 +34,13 @@ const ListScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <AntDesign name="arrowleft" size={24} color="#FF9739" />
+          <Feather name="arrow-left" size={24} color="#FF9739" />
         </TouchableOpacity>
         <Text style={styles.title}>Lista de Compras</Text>
       </View>
 
-      {/* Formulário */}
       <View style={styles.form}>
         <TextInput
           style={styles.input}
@@ -64,6 +62,20 @@ const ListScreen = ({ navigation }) => {
           onChangeText={setDateTime}
           keyboardType="numeric"
         />
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.dropdownLabel}>Tipo de compra:</Text>
+          <Picker
+            selectedValue={selectedItem}
+            onValueChange={(itemValue) => setSelectedItem(itemValue)}
+            style={styles.dropdown}
+          >
+            <Picker.Item label="Selecione aqui" />
+            <Picker.Item label="Compra do mês" value="compra do mês" />
+            <Picker.Item label="Compra da semana" value="compra da semana" />
+            <Picker.Item label="Final de semana" value="final de semana" />
+            <Picker.Item label="Fim de ano" value="fim de ano" />
+          </Picker>
+        </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>Cancelar</Text>
@@ -74,11 +86,14 @@ const ListScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Ícone sorrindo animado */}
       {showSmile && (
-        <Animatable.View animation="bounceIn" style={styles.smileIcon}>
-          <AntDesign name="smileo" size={80} color="#FF8517" />
-        </Animatable.View>
+        <View style={styles.smileIcon}>
+          <LottieView
+            source={require('./smile-animation.json')}
+            autoPlay
+            loop={false}
+          />
+        </View>
       )}
     </View>
   );
@@ -95,16 +110,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+  backButton: {
+    paddingHorizontal: 10,
+  },
   title: {
-    paddingTop: 20,
-    paddingLeft: 60,
+    flex: 1,
     color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 20,
+    textAlign: 'center', // Centraliza o texto
+    paddingTop: 10,
   },
   form: {
     flex: 1,
-    paddingTop: 35,
+    paddingTop: 20,
   },
   input: {
     backgroundColor: '#F0F0F0',
@@ -112,6 +131,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 12,
     marginBottom: 15,
+  },
+  dropdownContainer: {
+    marginBottom: 15,
+  },
+  dropdownLabel: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  dropdown: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 5,
+    marginBottom: 15,
+    padding: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',

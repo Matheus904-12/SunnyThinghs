@@ -25,7 +25,7 @@ const CartScreen = ({ navigation }) => {
       <View style={styles.totalItemsContainer}>
         <Text style={styles.totalItemsText}>Total de Itens (0)</Text>
         <TouchableOpacity onPress={handleClearCart}>
-          <Text style={styles.clearCartText}>Limpar Carrinho</Text>
+          <Text style={styles.clearCartText}>Limpar</Text>
         </TouchableOpacity>
       </View>
 
@@ -70,7 +70,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 20,
-    marginLeft: 20,
+    paddingTop: 20,
+    textAlign: 'center', // Centraliza o texto
+
   },
   totalItemsContainer: {
     flexDirection: 'row',
@@ -80,11 +82,14 @@ const styles = StyleSheet.create({
   totalItemsText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 14,
+    padding: 10,
   },
   clearCartText: {
     color: '#FF8517',
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: 'bold',
+    padding: 10,
   },
   productListContainer: {
     flex: 1,
@@ -95,6 +100,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#3C090D',
     padding: 20,
     borderRadius: 10,
+    marginBottom: -15,
+    transform: [{ scale: 1.1 }],
+    borderTopLeftRadius: 20, // Arredonda o canto superior esquerdo
+    borderTopRightRadius: 20, // Não arredonda o canto superior direito
+    borderBottomLeftRadius: 0, // Não arredonda o canto inferior esquerdo
+    borderBottomRightRadius: 0, // Arredonda o canto inferior direito
   },
   tabBarText: {
     color: '#FFFFFF',
